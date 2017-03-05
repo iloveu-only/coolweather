@@ -1,5 +1,8 @@
+package com.coolwheather.android;
+
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,24 +14,18 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.coolwheather.android.R;
 import com.coolwheather.android.db.City;
 import com.coolwheather.android.db.County;
 import com.coolwheather.android.db.Province;
 import com.coolwheather.android.util.HttpUtil;
 import com.coolwheather.android.util.Utility;
-
 import org.litepal.crud.DataSupport;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-import okhttp3.internal.Util;
 
 /**
  * Created by Administrator on 2017/3/4 0004.
@@ -94,6 +91,12 @@ public class ChooseAreaFragment extends Fragment {
                 }else if(currentLevel==LEVEL_CITY){
                     selectedCity=cityList.get(position);
                     queryCounties();
+                }else if(currentLevel==LEVEL_COUNTY){
+                    String weatherId=countyList.get(position).getWeatherId();
+                    Intent intent=new Intent(getActivity(),WeatherActivity.class);
+                    intent.putExtra("weather_id",weatherId);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });
@@ -233,7 +236,7 @@ public class ChooseAreaFragment extends Fragment {
     private void showProgressDialog(){
         if(progressDialog==null){
             progressDialog=new ProgressDialog(getActivity());
-            progressDialog.setMessage("正在加载。。。。。。");
+            progressDialog.setMessage("正在加载......");
             progressDialog.setCanceledOnTouchOutside(false);
         }
         progressDialog.show();
@@ -247,5 +250,7 @@ public class ChooseAreaFragment extends Fragment {
             progressDialog.dismiss();
         }
     }
+
+
 
 }
